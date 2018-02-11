@@ -40,19 +40,47 @@ void initializeGrid(){
 void printGrid(){
     string symbol;
     int symbolVal = 0;
+
+    //Print the x axis legend;
+    int count = 2;
+    for (int i = 0; i < gridDimensions; ++i) {
+        int countPrev = count;
+        for (int j = 0; j < countPrev; ++j) {
+            cout << " ";
+            if (count != 3)
+            count++;
+        }
+
+        cout << i;
+    }
+
+    cout<<endl;
+
     for (int i = 0; i < gridDimensions; ++i) {
         for (int j = 0; j < gridDimensions; ++j) {
 
             symbolVal = mainGrid[j][i];
 
+            //Print the y axis legend index
+            if(j == 0)
+            {
+                cout << i << " ";
+            }
+
+            //Convert integers into symbols
             if(symbolVal == X) symbol = "X";
             else if(symbolVal == O) symbol = "O";
             else if(symbolVal == 0) symbol = " ";
 
+            //Print the symbol
             cout << symbol << " | ";
         }
+
         cout << endl;
-        for(int x = 0; x < (4*gridDimensions)-1; x++) cout << "-";
+
+        //Draw separation lines among each row
+        for(int x = 0; x < (4*gridDimensions)+1; x++) cout << "-";
+
         cout << endl;
     }
 
@@ -65,6 +93,7 @@ void playerTurn(int TurnSymbol, int xLoc, int yLoc){
     printGrid();
 }
 
+//Simulates turn based gameplay among the two players
 void simulateGame(){
     while(!isWin) {
         int xLoc = 0, yLoc = 0;
@@ -82,7 +111,6 @@ void simulateGame(){
         }
     }
 
-
 }
 
 /*
@@ -91,9 +119,11 @@ void simulateGame(){
  * no overwriting allowed functionality
  * More dynamic simulate game (by allowing user(s) to select who goes first)
  * AI Implementation
+ * GUI Implementation
  * */
 int main() {
     initializeGrid();
+    printGrid();
 
     simulateGame();
 
