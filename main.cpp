@@ -89,7 +89,9 @@ void printGrid(){
 
 //subroutine for updating grid when a player makes a turn
 bool playerTurn(int TurnSymbol, int xLoc, int yLoc){
+    //Check if move index within bounds
     if ((xLoc >= 0 && yLoc >= 0) && (xLoc < gridDimensions && yLoc < gridDimensions)) {
+        //Check if spot empty
         if (mainGrid[xLoc][yLoc] == 0  ) {
             mainGrid[xLoc][yLoc] = TurnSymbol;
             printGrid();
@@ -107,6 +109,51 @@ bool playerTurn(int TurnSymbol, int xLoc, int yLoc){
 
 }
 
+//returns 1 for a win, 0 for a loss and 2 for a draw
+int checkEndgame(){
+
+    //bool isEndgame = false;
+
+    //Check for rows
+    for (int i = 0; i < gridDimensions; ++i) {
+        for (int j = 0; j < gridDimensions - 1; ++j) {
+            if (mainGrid[j][i] == 0) break;
+            if (mainGrid[j][i] != mainGrid[j + 1][i]) break;
+            if(j == gridDimensions - 2) return 1;
+        }
+    }
+
+    //Check for columns
+    for (int i = 0; i < gridDimensions; ++i) {
+        for (int j = 0; j < gridDimensions - 1; ++j) {
+            if (mainGrid[i][j] == 0) break;
+            if (mainGrid[i][j] != mainGrid[i][j + 1]) break;
+            if(j == gridDimensions - 2) return 1;
+        }
+    }
+
+    //Check for negative sloped diagonal
+    for (int i = 0; i < gridDimensions-1; ++i) {
+        for (int j = 0; j < gridDimensions - 1; ++j) {
+            if (mainGrid[j][i] == 0) break;
+            if (mainGrid[i][j] != mainGrid[i+1][j + 1]) break;
+            if(j == gridDimensions - 2) return 1;
+        }
+    }
+
+    //Check for positive sloped diagonal
+    for (int i = gridDimensions - 1; i >= 1; i--) {
+        for (int j = 0; j < gridDimensions - 1; ++j) {
+            if (mainGrid[j][i] == 0) break;
+            if (mainGrid[i][j] != mainGrid[i-1][j + 1]) break;
+            if(j == gridDimensions - 2) return 1;
+        }
+    }
+
+    return  0;
+}
+
+
 //Simulates turn based gameplay among the two players
 void simulateGame(){
     while(!isWin) {
@@ -114,25 +161,31 @@ void simulateGame(){
 
         if (!isAIPlaying) {
 
-
             if (whosTurn == 1) {
                 cout << "Player 1's Turn: " << endl;
                 cout << "Enter the x and y coordinates: ";
                 cin >> xLoc >> yLoc;
 
-                if (playerTurn(X, xLoc, yLoc)) whosTurn = 2;
+                if (playerTurn(X, xLoc, yLoc)){
+                    if(checkEndgame() == 1) cout << "Player 1 Won!!" << endl;
+                    else whosTurn = 2;
+                }
 
             } else if (whosTurn == 2) {
                 cout << "Player 2's Turn: " << endl;
                 cout << "Enter the x and y coordinates: ";
                 cin >> xLoc >> yLoc;
 
-                if (playerTurn(O, xLoc, yLoc)) whosTurn = 1;
+                if (playerTurn(O, xLoc, yLoc)){
+                    if(checkEndgame() == 1) cout << "Player 2 Won!!" << endl;
+                    else whosTurn = 1;
+                }
             }
         }
     }
 
 }
+
 
 
 /*
