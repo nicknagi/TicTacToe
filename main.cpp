@@ -88,42 +88,62 @@ void printGrid(){
 }
 
 //subroutine for updating grid when a player makes a turn
-void playerTurn(int TurnSymbol, int xLoc, int yLoc){
-    mainGrid[xLoc][yLoc] = TurnSymbol;
-    printGrid();
+bool playerTurn(int TurnSymbol, int xLoc, int yLoc){
+    if ((xLoc >= 0 && yLoc >= 0) && (xLoc < gridDimensions && yLoc < gridDimensions)) {
+        if (mainGrid[xLoc][yLoc] == 0  ) {
+            mainGrid[xLoc][yLoc] = TurnSymbol;
+            printGrid();
+            return true;
+        }
+        else {
+            cout << "Invalid move! try Again" << endl;
+            return false;
+        }
+    }
+    else {
+        cout << "Out of bounds! try Again" << endl;
+        return false;
+    }
+
 }
 
 //Simulates turn based gameplay among the two players
 void simulateGame(){
     while(!isWin) {
         int xLoc = 0, yLoc = 0;
-        if (!isAIPlaying) {
-            cout << "Enter the x and y coordinates: ";
-            cin >> xLoc >> yLoc;
-        }
 
-        if (whosTurn == 1) {
-            playerTurn(X, xLoc, yLoc);
-            whosTurn = 2;
-        } else if (whosTurn == 2) {
-            playerTurn(O, xLoc, yLoc);
-            whosTurn = 1;
+        if (!isAIPlaying) {
+
+
+            if (whosTurn == 1) {
+                cout << "Player 1's Turn: " << endl;
+                cout << "Enter the x and y coordinates: ";
+                cin >> xLoc >> yLoc;
+
+                if (playerTurn(X, xLoc, yLoc)) whosTurn = 2;
+
+            } else if (whosTurn == 2) {
+                cout << "Player 2's Turn: " << endl;
+                cout << "Enter the x and y coordinates: ";
+                cin >> xLoc >> yLoc;
+
+                if (playerTurn(O, xLoc, yLoc)) whosTurn = 1;
+            }
         }
     }
 
 }
 
+
 /*
  * TO DO:
  * Add endgame checking logic
- * no overwriting allowed functionality
  * More dynamic simulate game (by allowing user(s) to select who goes first)
  * AI Implementation
  * GUI Implementation
  * */
 int main() {
     initializeGrid();
-    printGrid();
 
     simulateGame();
 
