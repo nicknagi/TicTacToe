@@ -242,9 +242,6 @@ void simulateGame(){
 int main() {
     initializeGrid();
 
-    int temp, temp2;
-    AIMove(temp, temp2);
-
     simulateGame();
 
     return 0;
