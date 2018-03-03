@@ -20,7 +20,7 @@ int gridDimensions = 3;
 int whosTurn = 1;
 
 //AI toggle
-bool isAIPlaying = false;
+bool isAIPlaying = true;
 
 //Bool to hold if endgame reached
 bool isWin = false;
@@ -98,11 +98,13 @@ bool playerTurn(int TurnSymbol, int xLoc, int yLoc){
             return true;
         }
         else {
+            if(!(isAIPlaying == true && whosTurn == 2))
             cout << "Invalid move! try Again" << endl;
             return false;
         }
     }
     else {
+        if(!(isAIPlaying == true && whosTurn == 2))
         cout << "Out of bounds! try Again" << endl;
         return false;
     }
@@ -151,6 +153,13 @@ int checkEndgame(){
     return  0;
 }
 
+//Computer AI logic
+//Randomly play a move
+void AIMove (int &xLoc, int &yLoc){
+    srand(time(NULL));
+    xLoc = rand() % (gridDimensions);
+    yLoc = rand() % (gridDimensions);
+}
 
 //Simulates turn based gameplay among the two players
 void simulateGame(){
@@ -186,6 +195,36 @@ void simulateGame(){
                 }
             }
         }
+        else{
+            if (whosTurn == 1) {
+                cout << "Player 1's (X) Turn: " << endl;
+                cout << "Enter the x and y coordinates: ";
+                cin >> xLoc >> yLoc;
+
+                if (playerTurn(X, xLoc, yLoc)){
+                    if(checkEndgame() == 1){
+                        cout << "Player 1 Won!!" << endl;
+                        isWin = true;
+                    }
+                    else{
+                        whosTurn = 2;
+                        //Tp prevent multiple couts as AI is random atm
+                        cout << "AI's (O) Turn: " << endl;
+                    }
+                }
+
+            } else if (whosTurn == 2) {
+                AIMove(xLoc, yLoc);
+
+                if (playerTurn(O, xLoc, yLoc)){
+                    if(checkEndgame() == 1){
+                        cout << "Computer Won!!" << endl;
+                        isWin = true;
+                    }
+                    else whosTurn = 1;
+                }
+            }
+        }
     }
 
     cout << "Game Over!!" << endl;
@@ -202,6 +241,9 @@ void simulateGame(){
  * */
 int main() {
     initializeGrid();
+
+    int temp, temp2;
+    AIMove(temp, temp2);
 
     simulateGame();
 
