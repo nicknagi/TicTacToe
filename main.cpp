@@ -134,20 +134,18 @@ int checkEndgame(){
 
     //Check for negative sloped diagonal
     for (int i = 0; i < gridDimensions-1; ++i) {
-        for (int j = 0; j < gridDimensions - 1; ++j) {
-            if (mainGrid[j][i] == 0) break;
-            if (mainGrid[i][j] != mainGrid[i+1][j + 1]) break;
-            if(j == gridDimensions - 2) return 1;
-        }
+            if (mainGrid[i][i] == 0) break;
+            if (mainGrid[i][i] != mainGrid[i + 1][i + 1]) break;
+            if(i == gridDimensions - 2) return 1;
     }
 
+    int j = 0;
     //Check for positive sloped diagonal
     for (int i = gridDimensions - 1; i >= 1; i--) {
-        for (int j = 0; j < gridDimensions - 1; ++j) {
             if (mainGrid[j][i] == 0) break;
             if (mainGrid[i][j] != mainGrid[i-1][j + 1]) break;
             if(j == gridDimensions - 2) return 1;
-        }
+            j++;
     }
 
     return  0;
@@ -162,27 +160,35 @@ void simulateGame(){
         if (!isAIPlaying) {
 
             if (whosTurn == 1) {
-                cout << "Player 1's Turn: " << endl;
+                cout << "Player 1's (X) Turn: " << endl;
                 cout << "Enter the x and y coordinates: ";
                 cin >> xLoc >> yLoc;
 
                 if (playerTurn(X, xLoc, yLoc)){
-                    if(checkEndgame() == 1) cout << "Player 1 Won!!" << endl;
+                    if(checkEndgame() == 1){
+                        cout << "Player 1 Won!!" << endl;
+                        isWin = true;
+                    }
                     else whosTurn = 2;
                 }
 
             } else if (whosTurn == 2) {
-                cout << "Player 2's Turn: " << endl;
+                cout << "Player 2's (O) Turn: " << endl;
                 cout << "Enter the x and y coordinates: ";
                 cin >> xLoc >> yLoc;
 
                 if (playerTurn(O, xLoc, yLoc)){
-                    if(checkEndgame() == 1) cout << "Player 2 Won!!" << endl;
+                    if(checkEndgame() == 1){
+                        cout << "Player 2 Won!!" << endl;
+                        isWin = true;
+                    }
                     else whosTurn = 1;
                 }
             }
         }
     }
+
+    cout << "Game Over!!" << endl;
 
 }
 
@@ -190,7 +196,6 @@ void simulateGame(){
 
 /*
  * TO DO:
- * Add endgame checking logic
  * More dynamic simulate game (by allowing user(s) to select who goes first)
  * AI Implementation
  * GUI Implementation
